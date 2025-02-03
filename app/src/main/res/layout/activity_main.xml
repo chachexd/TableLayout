@@ -6,13 +6,26 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:theme="@style/Theme.AppCompat.Light"
-    android:background="@color/white">
+    android:background="#232425"
+    android:gravity="center">
+
+    <ImageView
+        android:id="@+id/imgLogo"
+        android:layout_width="217dp"
+        android:layout_height="52dp"
+        android:layout_gravity="center"
+        android:contentDescription="App"
+        android:src="@drawable/imagen_sky_scanner" />
 
     <TextView
         android:id="@+id/txtTextoInformacion"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Información del usuario"/>
+        android:text="Información del usuario"
+        android:textColor="#C8C8C8"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:layout_marginTop="16dp"/>
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout"
@@ -24,15 +37,15 @@
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabLayout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/degradado1">
+            android:layout_height="wrap_content"
+            android:background="#2BBBFD">
         </com.google.android.material.tabs.TabLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/viewpager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:background="#232425" />
 
 </LinearLayout>
-

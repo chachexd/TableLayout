@@ -32,6 +32,18 @@ public class DBConexion extends SQLiteOpenHelper {
 
     public static final String SENTENCIA_INSERCION_CONTACTOS = "insert into contactos (nombre, telefono, email)";
 
+    // Define the callback interface
+    public interface OnContactInsertedListener {
+        void onContactInserted();
+    }
+
+    private OnContactInsertedListener contactInsertedListener;
+
+    // Method to set the callback listener
+    public void setOnContactInsertedListener(OnContactInsertedListener listener) {
+        this.contactInsertedListener = listener;
+    }
+
     //Constructor
     public DBConexion(@Nullable Context context) {
         super(context, DB_NAME, null, DB_VERSION);
@@ -85,7 +97,11 @@ public class DBConexion extends SQLiteOpenHelper {
         valores.put("telefono", contacto.getTelefono());
         valores.put("email", contacto.getEmail());
 
-
         db.insert(TABLA_CONTACTOS, null, valores);
+
+        // Notify the listener
+        if (contactInsertedListener != null) {
+            contactInsertedListener.onContactInserted();
+        }
     }
 }

@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.tablelayout.DB.DBConexion
 
-class ContactosFragment : Fragment() {
+class ContactosFragment : Fragment(), DBConexion.OnContactInsertedListener {
     protected var mRecyclerView: RecyclerView? = null
     protected var mAdapter: ControladorRecyclerView? = null
     protected var mLayoutManager: RecyclerView.LayoutManager? = null
@@ -31,6 +31,20 @@ class ContactosFragment : Fragment() {
         if (db != null) {
             inciarRecogidaDatos(conexion1, db)
         }
+
+        // Set the callback listener
+        conexion1!!.setOnContactInsertedListener(this)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        conexion1 = DBConexion(requireContext())
+        db = conexion1!!.writableDatabase
+        if (db!= null) {
+            inciarRecogidaDatos(conexion1, db)
+        }
+        mAdapter = ControladorRecyclerView(listaContactos)
+        recyclerView.adapter = mAdapter
     }
 
     override fun onCreateView(
@@ -50,7 +64,6 @@ class ContactosFragment : Fragment() {
         //Creamos el objeto controlador del recycler View, programado anteriormente
         mAdapter = ControladorRecyclerView(listaContactos)
 
-
         recyclerView = rootView.findViewById(R.id.recycleViewListaContactos)
 
         //Este sería para definir el deslizamineto de los items reciclerview
@@ -68,6 +81,18 @@ class ContactosFragment : Fragment() {
     private fun inciarRecogidaDatos(conexion: DBConexion?, db: SQLiteDatabase?) {
         if (conexion != null) {
             listaContactos = conexion.selectContactos(db) as ArrayList<Contacto>
+        }
+    }
+
+    override fun onContactInserted() {
+        // Update the contact list
+        actualizarListaContactos()
+    }
+
+    private fun actualizarListaContactos() {
+        if (conexion1 != null && db != null) {
+            listaContactos = conexion1!!.selectContactos(db) as ArrayList<Contacto>
+            mAdapter?.actualizarContactos(listaContactos)
         }
     }
 }
