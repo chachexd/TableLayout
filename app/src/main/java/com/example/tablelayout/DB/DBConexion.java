@@ -17,7 +17,7 @@ public class DBConexion extends SQLiteOpenHelper {
     private static final String DB_NAME = "aplicacionDB";
     private static final int DB_VERSION = 2;
 
-    //Tabla contactos
+    // Tabla contactos
     private static final String TABLA_CONTACTOS = "contactos";
     private static final String CONTACTO_ID = " _id";
     private static final String CONTACTO_NOMBRE = "nombre";
@@ -44,39 +44,36 @@ public class DBConexion extends SQLiteOpenHelper {
         this.contactInsertedListener = listener;
     }
 
-    //Constructor
+    // Constructor
     public DBConexion(@Nullable Context context) {
         super(context, DB_NAME, null, DB_VERSION);
     }
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        //Código sql
-        //Instanciamos y creamos la base de datos
-        //Este código se ejcuta cuando se crea la base de datos
+        // Código sql
+        // Instanciamos y creamos la base de datos
+        // Este código se ejecuta cuando se crea la base de datos
         db.execSQL("DROP TABLE IF EXISTS " + TABLA_CONTACTOS);
         db.execSQL(SENTENCIA_CREACION_TABLA_CONTACTOS);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        //Código sql para actualizar la base de datos
+        // Código sql para actualizar la base de datos
         db.execSQL("DROP TABLE IF EXISTS " + TABLA_CONTACTOS);
         onCreate(db);
     }
 
-    public ArrayList<Contacto> selectContactos (SQLiteDatabase db) {
+    public ArrayList<Contacto> selectContactos(SQLiteDatabase db) {
         ArrayList<Contacto> contactos = new ArrayList<>();
 
-        //Consultamos los datos
+        // Consultamos los datos
         Cursor c = db.rawQuery(SENTENCIA_SELECCION_CONTACTOS, null);
 
         if (c.moveToFirst()) {
-            do { //Es un fetch Array, ya utilizado en SQL Statement
-//                @SuppressLint("Range");
-//                int id = c.getInt(c.getColumnIndex("_id"));
-
-                //Asignamos el valor en nuestras variables para usarlos en lo que necesitemos
+            do {
+                // Asignamos el valor en nuestras variables para usarlos en lo que necesitemos
                 @SuppressLint("Range") String nombre = c.getString(c.getColumnIndex("nombre"));
                 @SuppressLint("Range") String telefono = c.getString(c.getColumnIndex("telefono"));
                 @SuppressLint("Range") String email = c.getString(c.getColumnIndex("email"));
@@ -90,7 +87,7 @@ public class DBConexion extends SQLiteOpenHelper {
         return contactos;
     }
 
-    public void insertarContacto (SQLiteDatabase db, Contacto contacto) {
+    public void insertarContacto(SQLiteDatabase db, Contacto contacto) {
         ContentValues valores = new ContentValues();
         valores.put("_id", 1);
         valores.put("nombre", contacto.getNombre());
@@ -103,5 +100,9 @@ public class DBConexion extends SQLiteOpenHelper {
         if (contactInsertedListener != null) {
             contactInsertedListener.onContactInserted();
         }
+    }
+
+    public void eliminarContacto(SQLiteDatabase db, Contacto contacto) {
+        db.delete(TABLA_CONTACTOS, "nombre = ?", new String[]{contacto.getNombre()});
     }
 }
